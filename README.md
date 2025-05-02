@@ -21,12 +21,11 @@ A modern, minimal, and user-friendly bus ticket booking system built with Django
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Ahad-Muhib/TicketNao.git
-   cd TicketNao
    ```
 2. **Create and activate a virtual environment:**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   venv\Scripts\activate   #On Mac: source venv/bin/activate 
    ```
 3. **Install dependencies:**
    ```bash
@@ -65,9 +64,6 @@ A modern, minimal, and user-friendly bus ticket booking system built with Django
 3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/YourFeature`)
 5. Open a Pull Request
-
-## License
-This project is licensed under the MIT License.
 
 ---
 
