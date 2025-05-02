@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Operator - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Delete Operator</h1>
+        <a href="{% url 'admin_panel:operators' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Operators
+        </a>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirm Deletion</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Warning!</h4>
+                <p>Are you sure you want to delete the operator <strong>{{ operator.name }}</strong>?</p>
+                <hr>
+                <p class="mb-0">This action cannot be undone. All buses, schedules, and bookings associated with this operator will also be deleted.</p>
+            </div>
+            
+            <h5>Operator Details:</h5>
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Name:</strong> {{ operator.name }}</li>
+                {% if operator.contact_email %}
+                <li class="list-group-item"><strong>Email:</strong> {{ operator.contact_email }}</li>
+                {% endif %}
+                {% if operator.contact_phone %}
+                <li class="list-group-item"><strong>Phone:</strong> {{ operator.contact_phone }}</li>
+                {% endif %}
+                <li class="list-group-item"><strong>Status:</strong> 
+                    {% if operator.is_active %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                    <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item"><strong>Created:</strong> {{ operator.created_at|date:"d M Y, H:i" }}</li>
+            </ul>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'admin_panel:operators' %}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

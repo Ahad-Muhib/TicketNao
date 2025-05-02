@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - TicketNao{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Admin Dashboard</h1>
+    </div>
+
+    <div class="row">
+        <!-- Statistics Cards -->
+        <div class="col-md-3">
+            <div class="card mb-4 border-success">
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ total_operators }}</h2>
+                    <p class="text-muted mb-0">Bus Operators</p>
+                </div>
+                <div class="card-footer bg-success">
+                    <a href="{% url 'admin_panel:operators' %}" class="text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        View Details
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card mb-4 border-primary">
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ total_buses }}</h2>
+                    <p class="text-muted mb-0">Buses</p>
+                </div>
+                <div class="card-footer bg-primary">
+                    <a href="{% url 'admin_panel:buses' %}" class="text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        View Details
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card mb-4 border-info">
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ total_routes }}</h2>
+                    <p class="text-muted mb-0">Routes</p>
+                </div>
+                <div class="card-footer bg-info">
+                    <a href="{% url 'admin_panel:routes' %}" class="text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        View Details
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card mb-4 border-warning">
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ total_schedules }}</h2>
+                    <p class="text-muted mb-0">Schedules</p>
+                </div>
+                <div class="card-footer bg-warning">
+                    <a href="{% url 'admin_panel:schedules' %}" class="text-white text-decoration-none d-flex justify-content-between align-items-center">
+                        View Details
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Booking Statistics -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Booking Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <h3 class="text-success">{{ confirmed_bookings }}</h3>
+                                <p class="text-muted">Confirmed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <h3 class="text-warning">{{ pending_bookings }}</h3>
+                                <p class="text-muted">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <h3 class="text-danger">{{ cancelled_bookings }}</h3>
+                                <p class="text-muted">Cancelled</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <h4>Total Revenue</h4>
+                        <h2 class="text-primary">৳ {{ total_revenue }}</h2>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin_panel:bookings' %}" class="text-decoration-none d-flex justify-content-between align-items-center">
+                        View All Bookings
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Bookings</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Passenger</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in recent_bookings %}
+                                <tr>
+                                    <td>{{ booking.booking_reference }}</td>
+                                    <td>{{ booking.passenger_name }}</td>
+                                    <td>৳ {{ booking.total_amount }}</td>
+                                    <td>
+                                        {% if booking.status == 'confirmed' %}
+                                        <span class="badge bg-success">Confirmed</span>
+                                        {% elif booking.status == 'pending' %}
+                                        <span class="badge bg-warning">Pending</span>
+                                        {% else %}
+                                        <span class="badge bg-danger">Cancelled</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No recent bookings found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'admin_panel:bookings' %}" class="text-decoration-none d-flex justify-content-between align-items-center">
+                        View All Bookings
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize DataTables if needed for any tables
+        if (typeof SimpleDatatables !== 'undefined') {
+            const tables = document.querySelectorAll('.datatable');
+            tables.forEach(table => {
+                new SimpleDatatables.DataTable(table);
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Bus Operator - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Edit Bus Operator</h1>
+        <a href="{% url 'admin_panel:operators' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Operators
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_name" class="form-label">Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.name.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.description.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_logo" class="form-label">Logo URL</label>
+                    {{ form.logo }}
+                    {% if form.logo.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.logo.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_contact_email" class="form-label">Contact Email</label>
+                            {{ form.contact_email }}
+                            {% if form.contact_email.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.contact_email.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_contact_phone" class="form-label">Contact Phone</label>
+                            {{ form.contact_phone }}
+                            {% if form.contact_phone.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.contact_phone.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    {{ form.is_active }}
+                    <label class="form-check-label" for="id_is_active">Active</label>
+                    {% if form.is_active.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.is_active.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Update Operator</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any form-related JavaScript here
+    });
+</script>
+{% endblock %}
