@@ -35,22 +35,10 @@
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'main:index' %}">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="bookingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Book Tickets
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'main:index' %}">
+                                <i class="fas fa-bus me-2"></i>Book Tickets
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="bookingDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'main:index' %}">
-                                        <i class="fas fa-bus me-2"></i>Bus Tickets
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-train me-2"></i>Train Tickets
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
