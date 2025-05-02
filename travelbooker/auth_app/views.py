@@ -13,20 +13,23 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
+            email_or_username = form.cleaned_data['email']
             password = form.cleaned_data['password']
             remember = form.cleaned_data.get('remember', False)
             
-            # Try to find user by email
-            try:
-                user = User.objects.get(email=email)
-                username = user.username
-            except User.DoesNotExist:
-                messages.error(request, 'Invalid email or password.')
-                return render(request, 'auth/login.html', {'form': form})
+            # Try to find user by email or username
+            user = None
             
-            # Authenticate with username (since Django uses username as login)
-            user = authenticate(request, username=username, password=password)
+            # First, check if input is an email
+            if '@' in email_or_username:
+                try:
+                    user_obj = User.objects.get(email=email_or_username)
+                    user = authenticate(request, username=user_obj.username, password=password)
+                except User.DoesNotExist:
+                    pass
+            else:
+                # If not email, try username directly
+                user = authenticate(request, username=email_or_username, password=password)
             
             if user is not None:
                 login(request, user)

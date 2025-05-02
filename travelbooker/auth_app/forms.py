@@ -4,8 +4,9 @@ from django.contrib.auth.password_validation import validate_password
 
 class LoginForm(forms.Form):
     """Login form"""
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'})
+    email = forms.CharField(
+        label="Email or Username",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email or username'})
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
