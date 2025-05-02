@@ -71,12 +71,15 @@ WSGI_APPLICATION = 'travelbooker.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('PGDATABASE', 'travelbooker'),
-        'USER': os.environ.get('PGUSER', 'postgres'),
-        'PASSWORD': os.environ.get('PGPASSWORD', 'postgres'),
-        'HOST': os.environ.get('PGHOST', 'localhost'),
-        'PORT': os.environ.get('PGPORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+
+        #'ENGINE': 'django.db.backends.postgresql',
+       # 'NAME': 'travelbooker',
+        #'USER': 'muhib',
+        #'PASSWORD': 'admin',  # This should match the password you set during PostgreSQL installation
+        #'HOST': 'localhost',
+        #'PORT': '5432',
     }
 }
 

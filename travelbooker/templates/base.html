@@ -22,7 +22,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-vibrant">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'main:index' %}">
                     <i class="fas fa-ticket-alt me-2"></i>TicketNao
@@ -35,11 +35,12 @@
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'main:index' %}">Home</a>
                         </li>
-                        <li class="nav-item">
+                       <!---- <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'main:index' %}">
                                 <i class="fas fa-bus me-2"></i>Book Tickets
                             </a>
                         </li>
+                    -->
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}" href="{% url 'main:my_bookings' %}">
@@ -55,7 +56,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{% url 'admin_panel:dashboard' %}">Dashboard</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header">Bus Management</h6></li>
+                                <!--<li><h6 class="dropdown-header">Bus Management</h6></li> -->
                                 <li><a class="dropdown-item" href="{% url 'admin_panel:operators' %}">Bus Operators</a></li>
                                 <li><a class="dropdown-item" href="{% url 'admin_panel:buses' %}">Buses</a></li>
                                 <li><a class="dropdown-item" href="{% url 'admin_panel:schedules' %}">Bus Schedules</a></li>
