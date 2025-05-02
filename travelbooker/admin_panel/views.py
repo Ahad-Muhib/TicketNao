@@ -9,7 +9,7 @@ from .forms import OperatorForm, BusForm, RouteForm, ScheduleForm
 
 def is_admin(user):
     """Check if user is admin"""
-    return user.is_authenticated and user.is_staff
+    return user.is_authenticated and user.is_superuser
 
 @login_required
 @user_passes_test(is_admin)
