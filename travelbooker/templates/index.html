@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}TravelBooker - Book Your Bus Tickets Online{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Search Box -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center mb-5">
+                <h1 class="display-4 fw-bold">Book Your Bus Tickets Online</h1>
+                <p class="lead">Travel hassle-free with our easy to use booking system</p>
+            </div>
+            <div class="col-md-10">
+                <div class="search-box shadow">
+                    <form id="search-form" action="{% url 'main:search' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="source" class="form-label">From</label>
+                                <input type="text" list="source-list" class="form-control" id="source" name="source" 
+                                       placeholder="Enter source city" required>
+                                <datalist id="source-list">
+                                    {% for route in routes %}
+                                    <option value="{{ route.source }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="destination" class="form-label">To</label>
+                                <input type="text" list="destination-list" class="form-control" id="destination" name="destination" 
+                                       placeholder="Enter destination city" required>
+                                <datalist id="destination-list">
+                                    {% for route in routes %}
+                                    <option value="{{ route.destination }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="departure-date" class="form-label">Date of Journey</label>
+                                <input type="date" class="form-control" id="departure-date" name="departure_date" required>
+                            </div>
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5">Search Buses</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section bg-body">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold">Why Choose TravelBooker?</h2>
+                <p class="lead text-muted">We make bus travel simple and convenient</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <h4>Easy Booking</h4>
+                        <p class="text-muted">Book your bus tickets in just a few clicks. Our user-friendly interface makes booking a breeze.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-chair"></i>
+                        </div>
+                        <h4>Interactive Seat Selection</h4>
+                        <p class="text-muted">Choose your preferred seats with our interactive seat layout. Pick window or aisle seats as per your preference.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card h-100">
+                    <div class="card-body">
+                        <div class="feature-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h4>Multiple Routes</h4>
+                        <p class="text-muted">We offer multiple bus routes across the country with different bus operators to choose from.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bus Operators Section -->
+<section class="operators-section py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold">Our Bus Operators</h2>
+                <p class="lead text-muted">We partner with the best bus operators to provide you with a comfortable journey</p>
+            </div>
+        </div>
+        <div class="row">
+            {% for operator in operators %}
+            <div class="col-md-4 col-sm-6">
+                <div class="card operator-card h-100">
+                    <div class="card-body text-center">
+                        {% if operator.logo %}
+                        <img src="{{ operator.logo }}" alt="{{ operator.name }}" class="operator-logo img-fluid">
+                        {% else %}
+                        <div class="operator-logo d-flex align-items-center justify-content-center">
+                            <i class="fas fa-bus fa-3x text-primary"></i>
+                        </div>
+                        {% endif %}
+                        <h5 class="card-title">{{ operator.name }}</h5>
+                        {% if operator.description %}
+                        <p class="card-text">{{ operator.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section py-5 bg-body">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold">How It Works</h2>
+                <p class="lead text-muted">Simple steps to book your bus tickets</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-6 text-center mb-4">
+                <div class="step-circle mb-3">
+                    <i class="fas fa-search fa-2x text-primary"></i>
+                </div>
+                <h5>Search Buses</h5>
+                <p class="text-muted">Enter your source, destination and travel date to find available buses.</p>
+            </div>
+            <div class="col-md-3 col-sm-6 text-center mb-4">
+                <div class="step-circle mb-3">
+                    <i class="fas fa-chair fa-2x text-primary"></i>
+                </div>
+                <h5>Select Seats</h5>
+                <p class="text-muted">Choose your preferred seats from the interactive seat layout.</p>
+            </div>
+            <div class="col-md-3 col-sm-6 text-center mb-4">
+                <div class="step-circle mb-3">
+                    <i class="fas fa-user fa-2x text-primary"></i>
+                </div>
+                <h5>Enter Details</h5>
+                <p class="text-muted">Fill in the passenger details and proceed to payment.</p>
+            </div>
+            <div class="col-md-3 col-sm-6 text-center mb-4">
+                <div class="step-circle mb-3">
+                    <i class="fas fa-ticket-alt fa-2x text-primary"></i>
+                </div>
+                <h5>Get Ticket</h5>
+                <p class="text-muted">Receive your e-ticket instantly upon successful booking.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/booking.js' %}"></script>
+{% endblock %}

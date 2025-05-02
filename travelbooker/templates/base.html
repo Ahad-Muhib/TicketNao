@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TicketNao - Bus and Train Booking System{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Simple DataTables CSS (for admin tables) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'main:index' %}">
+                    <i class="fas fa-ticket-alt me-2"></i>TicketNao
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'main:index' %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="bookingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Book Tickets
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="bookingDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'main:index' %}">
+                                        <i class="fas fa-bus me-2"></i>Bus Tickets
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-train me-2"></i>Train Tickets
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="myBookingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                My Bookings
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="myBookingsDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'main:my_bookings' %}">
+                                        <i class="fas fa-bus me-2"></i>Bus Bookings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-train me-2"></i>Train Bookings
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if user.is_authenticated and user.is_staff %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:dashboard' %}">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Bus Management</h6></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:operators' %}">Bus Operators</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:buses' %}">Buses</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:schedules' %}">Bus Schedules</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Train Management</h6></li>
+                                <li><a class="dropdown-item" href="#">Train Operators</a></li>
+                                <li><a class="dropdown-item" href="#">Trains</a></li>
+                                <li><a class="dropdown-item" href="#">Train Schedules</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:routes' %}">Routes</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:bookings' %}">Bookings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin_panel:users' %}">Users</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{% url 'auth:profile' %}">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'auth:logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'auth:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'auth:register' %}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div id="alert-container" class="container mt-3"></div>
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-3">TicketNao</h5>
+                    <p>The best way to book bus and train tickets online in Bangladesh. Travel with comfort and safety.</p>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'main:index' %}" class="text-decoration-none text-light">Home</a></li>
+                        <li><a href="{% url 'main:index' %}" class="text-decoration-none text-light">Bus Tickets</a></li>
+                        <li><a href="#" class="text-decoration-none text-light">Train Tickets</a></li>
+                        <li><a href="#" class="text-decoration-none text-light">About Us</a></li>
+                        <li><a href="#" class="text-decoration-none text-light">Contact</a></li>
+                        <li><a href="#" class="text-decoration-none text-light">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-3">Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> 123 Gulshan Avenue, Dhaka, Bangladesh</p>
+                    <p><i class="fas fa-phone me-2"></i> +880 1712-345678</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@ticketnao.com</p>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="text-center">
+                <p class="mb-0">&copy; {% now "Y" %} TicketNao. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Simple DataTables JS (for admin tables) -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

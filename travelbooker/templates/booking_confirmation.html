@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Booking Confirmation - TravelBooker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-4 no-print">
+                <h2>Booking Confirmed!</h2>
+                <p class="lead">Your booking has been confirmed. Here is your ticket.</p>
+            </div>
+            
+            <div class="ticket">
+                <div class="ticket-header">
+                    <h4 class="mb-0">TravelBooker Bus Ticket</h4>
+                </div>
+                
+                <div class="ticket-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Booking Reference</div>
+                                <div class="ticket-value">{{ booking.booking_reference }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Booking Date</div>
+                                <div class="ticket-value">{{ booking.booking_date|date:"d M Y, H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="ticket-section">
+                        <div class="ticket-label">Passenger Name</div>
+                        <div class="ticket-value">{{ booking.passenger_name }}</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Email</div>
+                                <div class="ticket-value">{{ booking.passenger_email }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Phone</div>
+                                <div class="ticket-value">{{ booking.passenger_phone }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Bus Operator</div>
+                                <div class="ticket-value">{{ booking.schedule.bus.operator.name }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Bus Type</div>
+                                <div class="ticket-value">{{ booking.schedule.bus.bus_type }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">From</div>
+                                <div class="ticket-value">{{ booking.schedule.route.source }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">To</div>
+                                <div class="ticket-value">{{ booking.schedule.route.destination }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Departure Date & Time</div>
+                                <div class="ticket-value">{{ booking.schedule.departure_time|date:"d M Y, H:i" }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="ticket-section">
+                                <div class="ticket-label">Arrival Date & Time</div>
+                                <div class="ticket-value">{{ booking.schedule.arrival_time|date:"d M Y, H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-section">
+                        <div class="ticket-label">Seat(s)</div>
+                        <div class="ticket-seats">
+                            {% for booking_seat in booking.seats.all %}
+                            <div class="ticket-seat">{{ booking_seat.seat.seat_number }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="ticket-section">
+                        <div class="ticket-label">Total Amount</div>
+                        <div class="ticket-value">₹{{ booking.total_amount }}</div>
+                    </div>
+                    
+                    <div class="ticket-qr">
+                        <!-- Font Awesome QR Code Icon as placeholder -->
+                        <i class="fas fa-qrcode fa-8x"></i>
+                    </div>
+                </div>
+                
+                <div class="ticket-footer">
+                    <p class="mb-0">Please show this ticket at the time of boarding. Have a safe journey!</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4 no-print">
+                <button onclick="printTicket()" class="btn btn-primary me-2">
+                    <i class="fas fa-print me-2"></i> Print Ticket
+                </button>
+                <a href="{% url 'main:my_bookings' %}" class="btn btn-secondary">
+                    <i class="fas fa-list me-2"></i> My Bookings
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/booking.js' %}"></script>
+{% endblock %}

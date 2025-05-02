@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modify Booking - TravelBooker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="section-heading">Modify Booking</h2>
+            <p class="text-muted">Booking Reference: {{ booking.booking_reference }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'main:my_bookings' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Back to My Bookings
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Current Booking Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p><strong>Route:</strong> {{ booking.schedule.route.source }} → {{ booking.schedule.route.destination }}</p>
+                            <p><strong>Bus:</strong> {{ booking.schedule.bus.name }} ({{ booking.schedule.bus.operator.name }})</p>
+                            <p><strong>Bus Type:</strong> {{ booking.schedule.bus.bus_type }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Departure:</strong> {{ booking.schedule.departure_time|date:"d M Y, H:i" }}</p>
+                            <p><strong>Arrival:</strong> {{ booking.schedule.arrival_time|date:"d M Y, H:i" }}</p>
+                            <p><strong>Total Amount:</strong> ₹{{ booking.total_amount }}</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <p><strong>Selected Seats:</strong></p>
+                        {% for booking_seat in booking.seats.all %}
+                        <div class="badge bg-primary p-2">Seat {{ booking_seat.seat.seat_number }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Available Alternative Schedules</h5>
+                </div>
+                <div class="card-body">
+                    {% if alternative_schedules %}
+                    <form method="post" action="{% url 'main:update_booking' booking.id %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> Selecting a new schedule will modify your booking. Your seat selection will be reset and you'll need to select seats again.
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Date & Time</th>
+                                        <th>Bus</th>
+                                        <th>Duration</th>
+                                        <th>Fare</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for schedule in alternative_schedules %}
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="schedule_id" id="schedule-{{ schedule.id }}" value="{{ schedule.id }}" required>
+                                                <label class="form-check-label" for="schedule-{{ schedule.id }}"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>{{ schedule.departure_time|date:"d M Y, H:i" }}</div>
+                                            <small class="text-muted">Arrival: {{ schedule.arrival_time|date:"H:i" }}</small>
+                                        </td>
+                                        <td>
+                                            <div>{{ schedule.bus.name }}</div>
+                                            <small class="text-muted">{{ schedule.bus.operator.name }} - {{ schedule.bus.bus_type }}</small>
+                                        </td>
+                                        <td>
+                                            {% with duration=schedule.arrival_time|timeuntil:schedule.departure_time %}
+                                            {{ duration }}
+                                            {% endwith %}
+                                        </td>
+                                        <td>₹{{ schedule.fare }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Proceed to Seat Selection</button>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i> No alternative schedules available for this route. Please check back later or choose a different route.
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="{% url 'main:index' %}" class="btn btn-primary">Search New Routes</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Modification Policy</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Modification is allowed up to 6 hours before departure</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Fare difference will be adjusted in the new booking</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <span>Seat selection will be reset for the new schedule</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                            <span>Multiple modifications may be subject to service fee</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-times-circle text-danger me-2"></i>
+                            <span>Modifications cannot be made for cancelled bookings</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/booking.js' %}"></script>
+{% endblock %}

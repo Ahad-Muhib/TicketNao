@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bus Search Results - TravelBooker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="section-heading">Bus Search Results</h2>
+            
+            <!-- Search details summary -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="mb-2 text-muted">From</div>
+                            <h5>{{ source }}</h5>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="mb-2 text-muted">To</div>
+                            <h5>{{ destination }}</h5>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="mb-2 text-muted">Date</div>
+                            <h5>{{ departure_date }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search results -->
+            <div class="schedule-list">
+                {% if schedules %}
+                    {% for schedule in schedules %}
+                    <div class="card schedule-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <div class="schedule-time">{{ schedule.departure_time|date:"H:i" }}</div>
+                                    <div class="schedule-date">{{ schedule.departure_time|date:"d M Y" }}</div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="schedule-operator mb-1">{{ schedule.bus.operator.name }}</div>
+                                    <div class="schedule-route">{{ schedule.route.source }} → {{ schedule.route.destination }}</div>
+                                    <div class="schedule-bus-details">
+                                        <span class="badge bg-primary">{{ schedule.bus.bus_type }}</span>
+                                        <span class="text-muted ms-2">{{ schedule.bus.name }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-center">
+                                    <div class="schedule-duration mb-1">
+                                        {% with duration_minutes=schedule.arrival_time|timeuntil:schedule.departure_time %}
+                                        {{ duration_minutes }}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="schedule-arrival text-muted">
+                                        Arrives: {{ schedule.arrival_time|date:"H:i" }}
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-end">
+                                    <div class="schedule-price mb-2">₹{{ schedule.fare }}</div>
+                                    <a href="{% url 'main:schedule_detail' schedule.id %}" class="btn btn-primary">View Seats</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No buses found for the selected route on this date. Please try different dates or routes.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Search again sidebar -->
+        <div class="col-md-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header">
+                    <h5 class="mb-0">Modify Search</h5>
+                </div>
+                <div class="card-body">
+                    <form id="search-form" action="{% url 'main:search' %}" method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="source" class="form-label">From</label>
+                            <select class="form-select" id="source" name="source" required
+                                    onchange="populateCities(this, 'destination')">
+                                <option value="">Select Source</option>
+                                {% for route in routes %}
+                                <option value="{{ route.source }}" {% if route.source == source %}selected{% endif %}>{{ route.source }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="destination" class="form-label">To</label>
+                            <select class="form-select" id="destination" name="destination" required>
+                                <option value="">Select Destination</option>
+                                {% for route in routes %}
+                                <option value="{{ route.destination }}" {% if route.destination == destination %}selected{% endif %}>{{ route.destination }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="departure-date" class="form-label">Date of Journey</label>
+                            <input type="date" class="form-control" id="departure-date" name="departure_date" value="{{ departure_date }}" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Search Buses</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/booking.js' %}"></script>
+<script src="{% static 'js/admin.js' %}"></script>
+{% endblock %}

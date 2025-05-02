@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Select Seats - TravelBooker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="section-heading">Select Your Seats</h2>
+            
+            <!-- Bus details card -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="text-muted mb-1">Bus Operator</div>
+                            <h5>{{ schedule.bus.operator.name }}</h5>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="text-muted mb-1">Bus Type</div>
+                            <h5>{{ schedule.bus.bus_type }}</h5>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="text-muted mb-1">Route</div>
+                            <h5>{{ schedule.route.source }} → {{ schedule.route.destination }}</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-muted mb-1">Departure</div>
+                            <h5>{{ schedule.departure_time|date:"d M Y, H:i" }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hidden schedule ID for JavaScript -->
+        <input type="hidden" id="schedule-id" value="{{ schedule.id }}">
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Seat layout container -->
+            <div id="seat-layout" class="mb-4">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Booking summary and form -->
+            <div class="booking-summary sticky-top" style="top: 20px;">
+                <h4>Booking Summary</h4>
+                
+                <div class="summary-item">
+                    <span>Fare per seat:</span>
+                    <span>₹<span id="fare">0.00</span></span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Selected seats:</span>
+                    <span id="selected-seat-count">0</span>
+                </div>
+                
+                <div class="summary-item summary-total">
+                    <span>Total Amount:</span>
+                    <span>₹<span id="total-price">0.00</span></span>
+                </div>
+                
+                <hr>
+                
+                <div class="selected-seats-container mb-4">
+                    <h5 class="mb-3">Selected Seats</h5>
+                    <div id="selected-seats">
+                        <p>No seats selected</p>
+                    </div>
+                </div>
+                
+                {% if user.is_authenticated %}
+                <form id="booking-form" action="{% url 'main:book_seats' schedule.id %}" method="post">
+                    {% csrf_token %}
+                    <h5 class="mb-3">Passenger Details</h5>
+                    
+                    <div class="mb-3">
+                        <label for="passenger-name" class="form-label">Passenger Name</label>
+                        <input type="text" class="form-control" id="passenger-name" name="passenger_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="passenger-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="passenger-email" name="passenger_email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="passenger-phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="passenger-phone" name="passenger_phone" required>
+                    </div>
+                    
+                    <!-- Hidden input for selected seats -->
+                    <input type="hidden" id="selected-seat-ids" name="selected_seat_ids">
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Book Now</button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i> Please <a href="{% url 'auth:login' %}?next={{ request.path }}">login</a> to book tickets.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/seat_selection.js' %}"></script>
+{% endblock %}
