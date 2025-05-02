@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Schedule - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Delete Schedule</h1>
+        <a href="{% url 'admin_panel:schedules' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Schedules
+        </a>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirm Deletion</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Warning!</h4>
+                <p>Are you sure you want to delete the schedule for route <strong>{{ schedule.route }}</strong> on <strong>{{ schedule.departure_time|date:"d M Y, H:i" }}</strong>?</p>
+                <hr>
+                <p class="mb-0">This action cannot be undone. All bookings associated with this schedule will also be deleted.</p>
+            </div>
+            
+            <h5>Schedule Details:</h5>
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Route:</strong> {{ schedule.route }}</li>
+                <li class="list-group-item"><strong>Bus:</strong> {{ schedule.bus.name }} ({{ schedule.bus.registration_number }})</li>
+                <li class="list-group-item"><strong>Departure:</strong> {{ schedule.departure_time|date:"d M Y, H:i" }}</li>
+                <li class="list-group-item"><strong>Arrival:</strong> {{ schedule.arrival_time|date:"d M Y, H:i" }}</li>
+                <li class="list-group-item"><strong>Fare:</strong> ৳ {{ schedule.fare }}</li>
+                <li class="list-group-item"><strong>Status:</strong> 
+                    {% if schedule.is_active %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                    <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item"><strong>Created:</strong> {{ schedule.created_at|date:"d M Y, H:i" }}</li>
+            </ul>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'admin_panel:schedules' %}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

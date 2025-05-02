@@ -352,6 +352,23 @@ def booking_detail(request, booking_id):
 
 @login_required
 @user_passes_test(is_admin)
+def update_booking_status(request, booking_id):
+    """Update booking status (confirm or cancel)"""
+    booking = get_object_or_404(Booking, pk=booking_id)
+    
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        if status in ['confirmed', 'cancelled']:
+            booking.status = status
+            booking.save()
+            messages.success(request, f'Booking {booking.booking_reference} has been {status}.')
+        else:
+            messages.error(request, 'Invalid status provided.')
+    
+    return redirect('admin_panel:booking_detail', booking_id=booking.id)
+
+@login_required
+@user_passes_test(is_admin)
 def users(request):
     """List all users"""
     from django.contrib.auth.models import User

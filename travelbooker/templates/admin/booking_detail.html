@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Booking Details - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Booking Details</h1>
+        <a href="{% url 'admin_panel:bookings' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Bookings
+        </a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Booking Information</h5>
+                    <span class="badge 
+                        {% if booking.status == 'confirmed' %}bg-success
+                        {% elif booking.status == 'pending' %}bg-warning
+                        {% else %}bg-danger{% endif %}">
+                        {{ booking.status|title }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Booking Reference</h6>
+                            <p class="lead">{{ booking.booking_reference }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Booking Date</h6>
+                            <p>{{ booking.booking_date|date:"d M Y, H:i" }}</p>
+                        </div>
+                    </div>
+                    
+                    <h6>Journey Details</h6>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-muted">Bus</small>
+                                    <p>{{ booking.schedule.bus.name }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Operator</small>
+                                    <p>{{ booking.schedule.bus.operator.name }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Registration</small>
+                                    <p>{{ booking.schedule.bus.registration_number }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-muted">From</small>
+                                    <p>{{ booking.schedule.route.source }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">To</small>
+                                    <p>{{ booking.schedule.route.destination }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Journey Date</small>
+                                    <p>{{ booking.schedule.departure_time|date:"d M Y, H:i" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6>Passenger Information</h6>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-muted">Name</small>
+                                    <p>{{ booking.passenger_name }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Email</small>
+                                    <p>{{ booking.passenger_email }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Phone</small>
+                                    <p>{{ booking.passenger_phone }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6>Seat Information</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Seat Number</th>
+                                    <th>Seat Type</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for seat in booking.seats.all %}
+                                <tr>
+                                    <td>{{ seat.seat.seat_number }}</td>
+                                    <td>{{ seat.seat.seat_type }}</td>
+                                    <td>৳ {{ seat.seat_price }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="table-primary">
+                                    <td colspan="2" class="text-end fw-bold">Total Amount:</td>
+                                    <td class="fw-bold">৳ {{ booking.total_amount }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if booking.status == 'pending' %}
+                    <form method="post" action="{% url 'admin_panel:update_booking_status' booking.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="confirmed">
+                        <button type="submit" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-check me-2"></i>Confirm Booking
+                        </button>
+                    </form>
+                    <form method="post" action="{% url 'admin_panel:update_booking_status' booking.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="fas fa-times me-2"></i>Cancel Booking
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <a href="javascript:printTicket()" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-print me-2"></i>Print Ticket
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Username:</strong> {{ booking.user.username }}</p>
+                    <p><strong>Email:</strong> {{ booking.user.email }}</p>
+                    <p><strong>Join Date:</strong> {{ booking.user.date_joined|date:"d M Y" }}</p>
+                    <p><strong>Total Bookings:</strong> {{ booking.user.bookings.count }}</p>
+                    <a href="{% url 'admin_panel:users' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye me-1"></i>View User Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function printTicket() {
+        window.print();
+    }
+</script>
+{% endblock %}

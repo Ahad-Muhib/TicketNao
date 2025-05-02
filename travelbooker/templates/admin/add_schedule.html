@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Bus Schedule - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Add Bus Schedule</h1>
+        <a href="{% url 'admin_panel:schedules' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Schedules
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_route" class="form-label">Route</label>
+                            {{ form.route }}
+                            {% if form.route.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.route.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_bus" class="form-label">Bus</label>
+                            {{ form.bus }}
+                            {% if form.bus.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.bus.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_departure_time" class="form-label">Departure Time</label>
+                            {{ form.departure_time }}
+                            {% if form.departure_time.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.departure_time.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_arrival_time" class="form-label">Arrival Time</label>
+                            {{ form.arrival_time }}
+                            {% if form.arrival_time.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.arrival_time.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_fare" class="form-label">Fare (৳)</label>
+                            {{ form.fare }}
+                            {% if form.fare.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.fare.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 mt-4">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="id_is_active">
+                                    Active
+                                </label>
+                                {% if form.is_active.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.is_active.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
