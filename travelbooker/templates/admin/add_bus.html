@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Bus - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Add Bus</h1>
+        <a href="{% url 'admin_panel:buses' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Buses
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_operator" class="form-label">Operator</label>
+                    {{ form.operator }}
+                    {% if form.operator.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.operator.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_name" class="form-label">Bus Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.name.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_registration_number" class="form-label">Registration Number</label>
+                    {{ form.registration_number }}
+                    {% if form.registration_number.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.registration_number.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_bus_type" class="form-label">Bus Type</label>
+                            {{ form.bus_type }}
+                            {% if form.bus_type.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.bus_type.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="id_total_seats" class="form-label">Total Seats</label>
+                            {{ form.total_seats }}
+                            {% if form.total_seats.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.total_seats.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_amenities" class="form-label">Amenities</label>
+                    <small class="text-muted d-block mb-2">Enter comma-separated amenities (e.g., WiFi, USB Charging, TV)</small>
+                    {{ form.amenities }}
+                    {% if form.amenities.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.amenities.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3 form-check">
+                    {{ form.is_active }}
+                    <label class="form-check-label" for="id_is_active">Active</label>
+                    {% if form.is_active.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.is_active.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="reset" class="btn btn-secondary me-md-2">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save Bus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Route - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Delete Route</h1>
+        <a href="{% url 'admin_panel:routes' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Routes
+        </a>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Confirm Deletion</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Warning!</h4>
+                <p>Are you sure you want to delete the route <strong>{{ route.source }}</strong> to <strong>{{ route.destination }}</strong>?</p>
+                <hr>
+                <p class="mb-0">This action cannot be undone. All schedules and bookings associated with this route will also be deleted.</p>
+            </div>
+            
+            <h5>Route Details:</h5>
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Source:</strong> {{ route.source }}</li>
+                <li class="list-group-item"><strong>Destination:</strong> {{ route.destination }}</li>
+                {% if route.distance_km %}
+                <li class="list-group-item"><strong>Distance:</strong> {{ route.distance_km }} km</li>
+                {% endif %}
+                {% if route.estimated_duration_minutes %}
+                <li class="list-group-item"><strong>Duration:</strong> {{ route.estimated_duration_minutes }} minutes</li>
+                {% endif %}
+                <li class="list-group-item"><strong>Created:</strong> {{ route.created_at|date:"d M Y, H:i" }}</li>
+            </ul>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'admin_panel:routes' %}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
