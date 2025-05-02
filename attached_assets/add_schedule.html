@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Schedule - TravelBooker Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="section-heading">Add New Bus Schedule</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('admin.add_schedule') }}" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="route_id" class="form-label">Route <span class="text-danger">*</span></label>
+                                <select class="form-select" id="route_id" name="route_id" required>
+                                    <option value="">Select Route</option>
+                                    {% for route in routes %}
+                                    <option value="{{ route.id }}">{{ route.source }} → {{ route.destination }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">Please select a route.</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="bus_id" class="form-label">Bus <span class="text-danger">*</span></label>
+                                <select class="form-select" id="bus_id" name="bus_id" required>
+                                    <option value="">Select Bus</option>
+                                    {% for bus in buses %}
+                                    <option value="{{ bus.id }}">{{ bus.name }} ({{ bus.operator.name }}) - {{ bus.bus_type }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">Please select a bus.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="departure_time" class="form-label">Departure Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="departure_time" name="departure_time" required>
+                                <div class="invalid-feedback">Please select a departure time.</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="arrival_time" class="form-label">Arrival Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" required>
+                                <div class="invalid-feedback">Please select an arrival time.</div>
+                                <small class="form-text text-muted">Arrival time must be after departure time.</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fare" class="form-label">Fare (₹) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="fare" name="fare" step="0.01" min="0" required>
+                                <div class="invalid-feedback">Please enter a valid fare amount.</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="scheduled" selected>Scheduled</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a status.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('admin.schedules') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Add Schedule</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">About Schedules</h5>
+                </div>
+                <div class="card-body">
+                    <p>Schedules define when a bus departs from a source and arrives at a destination.</p>
+                    <p>Each schedule is associated with a specific bus and route.</p>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i> Tip</h6>
+                        <p class="mb-0">Set realistic departure and arrival times. The same bus cannot be scheduled for overlapping times.</p>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Note</h6>
+                        <p class="mb-0">Once a schedule is created, seats will be available for booking based on the selected bus's capacity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

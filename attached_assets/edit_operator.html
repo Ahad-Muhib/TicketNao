@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Operator - TravelBooker Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="section-heading">Edit Bus Operator</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('admin.edit_operator', operator_id=operator.id) }}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Operator Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ operator.name }}" required>
+                            <div class="invalid-feedback">Please enter an operator name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="logo" class="form-label">Logo URL</label>
+                            <input type="url" class="form-control" id="logo" name="logo" value="{{ operator.logo or '' }}" placeholder="https://example.com/logo.svg">
+                            <small class="form-text text-muted">Enter a URL to the operator's logo (optional). SVG format is preferred.</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="contact_email" class="form-label">Contact Email</label>
+                                <input type="email" class="form-control" id="contact_email" name="contact_email" value="{{ operator.contact_email or '' }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="contact_phone" class="form-label">Contact Phone</label>
+                                <input type="tel" class="form-control" id="contact_phone" name="contact_phone" value="{{ operator.contact_phone or '' }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ operator.description or '' }}</textarea>
+                            <small class="form-text text-muted">Enter a brief description of the operator (optional).</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('admin.operators') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Operator</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Operator Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Created On:</strong> {{ operator.created_at.strftime('%d %b %Y') }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Total Buses:</strong> {{ operator.buses|length }}
+                    </div>
+                    
+                    {% if operator.logo %}
+                    <div class="mb-3 text-center border rounded p-3">
+                        <p class="mb-2"><strong>Current Logo</strong></p>
+                        <img src="{{ operator.logo }}" alt="{{ operator.name }}" style="max-height: 100px; max-width: 100%;">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle me-2"></i> Note</h6>
+                        <p class="mb-0">Changing the operator name will not affect existing buses assigned to this operator.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Route - TravelBooker Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="section-heading">Edit Route</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('admin.edit_route', route_id=route.id) }}" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="source" class="form-label">Source <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="source" name="source" value="{{ route.source }}" required>
+                                <div class="invalid-feedback">Please enter source city.</div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="destination" class="form-label">Destination <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="destination" name="destination" value="{{ route.destination }}" required>
+                                <div class="invalid-feedback">Please enter destination city.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="distance_km" class="form-label">Distance (km)</label>
+                                <input type="number" class="form-control" id="distance_km" name="distance_km" step="0.1" min="0" value="{{ route.distance_km or '' }}">
+                                <small class="form-text text-muted">Enter the distance between source and destination.</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="estimated_duration_minutes" class="form-label">Estimated Duration (minutes)</label>
+                                <input type="number" class="form-control" id="estimated_duration_minutes" name="estimated_duration_minutes" min="0" value="{{ route.estimated_duration_minutes or '' }}">
+                                <small class="form-text text-muted">Enter the estimated travel time in minutes.</small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('admin.routes') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Route</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Route Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Created On:</strong> {{ route.created_at.strftime('%d %b %Y') }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Schedules on this Route:</strong> {{ route.bus_schedules|length }}
+                    </div>
+                    
+                    {% if route.estimated_duration_minutes %}
+                    <div class="mb-3">
+                        <strong>Duration in Hours:</strong> 
+                        {{ (route.estimated_duration_minutes / 60)|int }} hours {{ (route.estimated_duration_minutes % 60)|int }} minutes
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-warning mt-3">
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Warning</h6>
+                        <p class="mb-0">Changing the source or destination might affect existing schedules. Make sure this is intended.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
