@@ -21,6 +21,7 @@ A modern, minimal, and user-friendly bus ticket booking system built with Django
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/Ahad-Muhib/TicketNao.git
+or download the zip-->extract.
    ```
 2. **Create and activate a virtual environment:**
    ```bash
@@ -35,7 +36,9 @@ A modern, minimal, and user-friendly bus ticket booking system built with Django
    ```bash
    python manage.py migrate
    ```
-5. **Create a superuser (admin):**
+5. **Create a superuser (admin):**(there's already an option with:
+username: admin
+password: admin123
    ```bash
    python manage.py createsuperuser
    ```
