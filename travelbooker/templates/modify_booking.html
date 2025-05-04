@@ -33,7 +33,7 @@
                         <div class="col-md-6">
                             <p><strong>Departure:</strong> {{ booking.schedule.departure_time|date:"d M Y, H:i" }}</p>
                             <p><strong>Arrival:</strong> {{ booking.schedule.arrival_time|date:"d M Y, H:i" }}</p>
-                            <p><strong>Total Amount:</strong> ₹{{ booking.total_amount }}</p>
+                            <p><strong>Total Amount:</strong> ৳{{ booking.total_amount }}</p>
                         </div>
                     </div>
 
@@ -93,7 +93,7 @@
                                             {{ duration }}
                                             {% endwith %}
                                         </td>
-                                        <td>₹{{ schedule.fare }}</td>
+                                        <td>৳{{ schedule.fare }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
