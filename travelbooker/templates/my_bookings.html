@@ -36,7 +36,7 @@
                                     <td>{{ booking.schedule.route.source }} → {{ booking.schedule.route.destination }}</td>
                                     <td>{{ booking.schedule.departure_time|date:"d M Y, H:i" }}</td>
                                     <td>{{ booking.schedule.bus.operator.name }} - {{ booking.schedule.bus.name }}</td>
-                                    <td>₹{{ booking.total_amount }}</td>
+                                    <td>৳{{ booking.total_amount }}</td>
                                     <td>
                                         {% if booking.status == 'confirmed' %}
                                         <span class="badge bg-success">Confirmed</span>
