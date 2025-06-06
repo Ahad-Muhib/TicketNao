@@ -26,8 +26,9 @@ or download the zip-->extract.
 2. **Create and activate a virtual environment:**
    ```bash
    python -m venv venv
-   venv\Scripts\activate   #On Mac: source venv/bin/activate 
+   on windows: venv\Scripts\activate   On Mac/linux: source venv/bin/activate
    ```
+
 3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
